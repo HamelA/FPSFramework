@@ -60,7 +60,6 @@ public class Ammo : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R) && currentMag < magazineSize && !isReloading)
         {
-            Debug.Log("Starting coroutine: Reload");
             reload = StartCoroutine(RefillMagazine());
         }
 
@@ -74,12 +73,10 @@ public class Ammo : MonoBehaviour
 
     IEnumerator RefillMagazine()
     {
-        isReloading = true;
+        Debug.Log("Starting coroutine: Reload");
 
-        if (dropMagazine)
-        {
-            currentMag = 0;
-        }
+        isReloading = true;
+        bool calculated = false;
 
         if (infiniteAmmo)
         {
@@ -90,6 +87,13 @@ public class Ammo : MonoBehaviour
         while (currentMag < magazineSize && ammoHeld > 0)
         {
             yield return new WaitForSeconds(reloadTime);
+
+            if (dropMagazine && !calculated)
+            {
+                currentMag = 0;
+                calculated = true;
+            }
+
             ammoHeld -= reloadAmount;
 
             if (ammoHeld < 0)
