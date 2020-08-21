@@ -64,45 +64,42 @@ public class Ammo : MonoBehaviour
             reload = StartCoroutine(RefillMagazine());
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isReloading/*gs.isShooting  || isMelee || isjumping || isThrowingGrenade*/)
+        /*if (isReloading && gs.isShooting  || isMelee || isjumping || isThrowingGrenade)
         {
             Debug.Log("Stopping coroutine: Reload");
             StopCoroutine(reload);
             isReloading = false;
-        }
+        }*/
     }
 
     IEnumerator RefillMagazine()
     {
         isReloading = true;
 
-        if (!dropMagazine)
+        if (dropMagazine)
         {
-            ammoHeld += currentMag;
             currentMag = 0;
         }
 
-        while (ammoHeld > 0 && currentMag < magazineSize)
+        if (infiniteAmmo)
         {
-            if (infiniteAmmo)
+            yield return new WaitForSeconds(reloadTime);
+            currentMag = magazineSize;
+        }
+
+        while (currentMag < magazineSize && ammoHeld > 0)
+        {
+            yield return new WaitForSeconds(reloadTime);
+            ammoHeld -= reloadAmount;
+
+            if (ammoHeld < 0)
             {
-                yield return new WaitForSeconds(reloadTime);
-                currentMag = magazineSize;
+                currentMag += reloadAmount - Math.Abs(ammoHeld);
+                ammoHeld = 0;
             }
             else
             {
-                yield return new WaitForSeconds(reloadTime);
-                ammoHeld -= reloadAmount;
-
-                if (ammoHeld < 0)
-                {
-                    currentMag += reloadAmount - Math.Abs(ammoHeld);
-                    ammoHeld = 0;
-                }
-                else
-                {
-                    currentMag += reloadAmount;
-                }
+                currentMag += reloadAmount;
             }
 
             if (currentMag > magazineSize)
