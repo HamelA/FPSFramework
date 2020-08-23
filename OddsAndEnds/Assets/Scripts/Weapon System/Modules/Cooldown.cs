@@ -5,7 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Cooldown : MonoBehaviour
+public class Cooldown : Ammo
 {
 
     //Cooldown stats
@@ -59,7 +59,7 @@ public class Cooldown : MonoBehaviour
     IEnumerator OverheatWait()
     {
         isRunning = true;
-        gs.SetReadyToShoot(false);       //CANT ACCESS THE VARIABLE SOME REASON, SOMETHING WITH INHERITANCE
+        gs.SetReadyToShoot(false);       //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
 
         while (overheatTime > overheatCounter)
         {
@@ -76,7 +76,7 @@ public class Cooldown : MonoBehaviour
         overheatCounter = 0;
         overheating = false;
 
-        gs.SetReadyToShoot(true);        //CANT ACCESS THE VARIABLE SOME REASON, SOMETHING WITH INHERITANCE
+        gs.SetReadyToShoot(true);        //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
         isRunning = false;
     }
 
