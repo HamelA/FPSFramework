@@ -29,7 +29,7 @@ public class ExampleFile : MonoBehaviour
     public GameObject muzzleFlash, bulletHoleGraphic;
     //public CamShake camShake;
     public float camShakeMagnitude, camShakeDuration;
-    //public TextMeshProUGUI text;
+    //public TextMeshProUGUI cooldownText;
 
     private void Awake()
     {
@@ -41,7 +41,7 @@ public class ExampleFile : MonoBehaviour
         MyInput();
 
         //SetText
-        //text.SetText(bulletsLeft + " / " + magazineSize);
+        //cooldownText.SetText(bulletsLeft + " / " + magazineSize);
     }
     private void MyInput()
     {

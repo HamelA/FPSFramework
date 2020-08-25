@@ -18,23 +18,34 @@ public abstract class Ammo : MonoBehaviour
     [Tooltip("Amount of bullets that can be shot before needing to be reloaded")]
     [SerializeField] protected int magazineSize = 20;
 
-    [Tooltip("Whether the gun has infinite ammo or not")]
-    [SerializeField] protected bool infiniteAmmo = false;
+    [Tooltip("Whether the magazine is infinite or not")]
+    [SerializeField] private bool bottomlessClip = false;
 
     protected int currentMag, ammoHeld;
-    protected bool isReloading = false;
 
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    public void DecreaseAmmo()
+    {
+        if (!bottomlessClip)
+        {
+            currentMag--;
+        }
+    }
+
+    protected void SetupInitialValues()
     {
         currentMag = magazineSize;
         ammoHeld = totalAmmo;
     }
 
-    protected void DecreaseAmmo()
+    public int GetCurrentMag()
     {
-        currentMag--;
+        return currentMag;
+    }
+
+    public int GetMagazineSize()
+    {
+        return magazineSize;
     }
 }

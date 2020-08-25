@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaycastWeapons : GunSystem
+public class RaycastWeapons : GunSystem2
 {
     //Gun stats
     [Header("Raycast")]
@@ -22,7 +22,6 @@ public class RaycastWeapons : GunSystem
     void Update()
     {
         MyInput();
-        TextManagement();
     }
 
     protected override void ShotType(float x, float y, float z)

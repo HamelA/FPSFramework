@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileWeapons : GunSystem
+public class ProjectileWeapons : GunSystem2
 {
     [Header("Projectile")]
     [Tooltip("Prefab of the projectile")]
@@ -14,7 +14,6 @@ public class ProjectileWeapons : GunSystem
     void Update()
     {
         MyInput();
-        TextManagement();
     }
 
     protected override void ShotType(float x, float y, float z)

@@ -16,13 +16,15 @@ public class Reload : Ammo
     [Header("Ammo Modifiers")]
     [Tooltip("Whether the magazine drops unused ammo when reloaded")]
     [SerializeField] private bool dropMagazine = false;
-    [Tooltip("Whether the magazine needs to be reloaded or not")]
-    [SerializeField] private bool bottomlessClip = false;
+    [Tooltip("Whether the gun has infinite ammo or not. Still requires reload.")]
+    [SerializeField] protected bool infiniteAmmo = false;
+
+    [Header("References")]
+    public Text text;
+
+    private bool isReloading = false;
 
     private GunSystem gs;
-    [HideInInspector] public bool reloading;
-
-    private Text text;
 
     private Coroutine reload;
 
@@ -30,27 +32,26 @@ public class Reload : Ammo
     void Start()
     {
         gs = GetComponent<GunSystem>();
+
+        SetupInitialValues();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isReloading)
-        {
-            text.text = currentMag + " / " + magazineSize + " / " + ammoHeld;
-        }
-
         if (Input.GetKeyDown(KeyCode.R) && currentMag < magazineSize && !isReloading)
         {
             reload = StartCoroutine(RefillMagazine());
         }
 
-        /*if (isReloading && gs.isShooting  || isMelee || isjumping || isThrowingGrenade)
+        /*if (isReloading && gs.isShooting || isMelee || isjumping || isSprinting || isThrowingGrenade)
         {
             Debug.Log("Stopping coroutine: Reload");
             StopCoroutine(reload);
             isReloading = false;
         }*/
+
+        TextManagement();
     }
 
     IEnumerator RefillMagazine()
@@ -65,67 +66,45 @@ public class Reload : Ammo
             yield return new WaitForSeconds(reloadTime);
             currentMag = magazineSize;
         }
-
-        while (currentMag < magazineSize && ammoHeld > 0)
+        else
         {
-            yield return new WaitForSeconds(reloadTime);
-
-            if (dropMagazine && !calculated)
+            while (currentMag < magazineSize && ammoHeld > 0)
             {
-                currentMag = 0;
-                calculated = true;
+                yield return new WaitForSeconds(reloadTime);
+
+                if (dropMagazine && !calculated)
+                {
+                    currentMag = 0;
+                    calculated = true;
+                }
+
+                ammoHeld -= reloadAmount;
+
+                if (ammoHeld < 0)
+                {
+                    currentMag += reloadAmount - Math.Abs(ammoHeld);
+                    ammoHeld = 0;
+                }
+                else
+                {
+                    currentMag += reloadAmount;
+                }
+
+                if (currentMag > magazineSize)
+                {
+                    ammoHeld += (currentMag - magazineSize);
+                    currentMag = magazineSize;
+                    if (ammoHeld > totalAmmo) ammoHeld = totalAmmo;
+                }
             }
-
-            ammoHeld -= reloadAmount;
-
-            if (ammoHeld < 0)
-            {
-                currentMag += reloadAmount - Math.Abs(ammoHeld);
-                ammoHeld = 0;
-            }
-            else
-            {
-                currentMag += reloadAmount;
-            }
-
-            if (currentMag > magazineSize)
-            {
-                ammoHeld += (currentMag - magazineSize);
-                currentMag = magazineSize;
-                if (ammoHeld > totalAmmo) ammoHeld = totalAmmo;
-            }
-
-            //SET TEXT HERE
-            text.text = currentMag + " / " + magazineSize + " / " + ammoHeld;
-
-            Debug.Log(currentMag);
         }
 
         isReloading = false;
         Debug.Log("Ended successfully");
     }
 
-
-
-
-
-
-    /*public void Reloading()
+    protected void TextManagement()
     {
-        gs.SetReadyToShoot(false);
-        reloading = true;
-        StartCoroutine(ReloadFinished());
+        text.text = currentMag + " / " + ammoHeld;
     }
-    IEnumerator ReloadFinished()
-    {
-        do
-        {
-            yield return new WaitForSeconds(reloadTime);
-            gs.SetBulletsLeft(gs.GetBulletsLeft() + reloadAmount);
-            if (gs.GetBulletsLeft() > gs.GetMagazineSize()) gs.SetBulletsLeft(gs.GetMagazineSize());     //Ensures the loop comes to an end
-        } while (gs.GetBulletsLeft() != gs.GetMagazineSize());
-
-        reloading = false;
-        gs.SetReadyToShoot(true);
-    }*/
 }

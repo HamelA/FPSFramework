@@ -21,25 +21,27 @@ public class Cooldown : Ammo
     [Tooltip("Determines whether the gun maintains its overheated state or if it lets the gun cooldown to 0 heat units")]
     [SerializeField] private bool retainHeat = false;
 
-    public Text text;
+    [Header("References")]
+    public Text ammoText;
+    public Text cooldownText;
 
     private float currentHeat;
     private bool overheating, isRunning;
 
     private float overheatCounter;
 
-    private GunSystem gs;
+    private GunSystem2 gs2;
 
     private void Start()
     {
+        SetupInitialValues();
+
         currentHeat = 0f;
         overheatCounter = 0f;
         overheating = false;
         isRunning = false;
 
-        gs = GetComponent<GunSystem>();
-
-        
+        gs2 = GetComponent<GunSystem2>();
     }
 
     private void Update()
@@ -53,13 +55,20 @@ public class Cooldown : Ammo
             StartCoroutine(OverheatWait());
         }
 
-        text.text = currentHeat + " / " + maxHeat;
+        TextManagement();
+    }
+
+    protected void TextManagement()
+    {
+        ammoText.text = currentMag + " / " + ammoHeld;
+        cooldownText.text = currentHeat + " / " + maxHeat;
     }
 
     IEnumerator OverheatWait()
     {
         isRunning = true;
-        gs.SetReadyToShoot(false);       //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
+        gs2.InterruptResetShot();
+        gs2.SetReadyToShoot(false);       //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
 
         while (overheatTime > overheatCounter)
         {
@@ -76,7 +85,7 @@ public class Cooldown : Ammo
         overheatCounter = 0;
         overheating = false;
 
-        gs.SetReadyToShoot(true);        //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
+        gs2.SetReadyToShoot(true);        //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
         isRunning = false;
     }
 
