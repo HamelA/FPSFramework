@@ -13,7 +13,7 @@ public class ProjectileWeapons : GunSystem2
     // Update is called once per frame
     void Update()
     {
-        MyInput();
+        TriggerPull();
     }
 
     protected override void ShotType(float x, float y, float z)

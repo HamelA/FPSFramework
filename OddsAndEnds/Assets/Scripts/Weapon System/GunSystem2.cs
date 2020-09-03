@@ -9,6 +9,8 @@ public abstract class GunSystem2 : MonoBehaviour
 
     //General gun stats
     [Header("General")]
+    [Tooltip("Whether the gun allows the trigger to be held or not")]
+    [SerializeField] private bool isAutomatic = false;
     [Tooltip("Time between bursts")]
     [SerializeField] private float timeBetweenBursts = 0.2f;
     [Tooltip("Time between each bullet in a burst")]
@@ -72,13 +74,11 @@ public abstract class GunSystem2 : MonoBehaviour
 
     private void Update()
     {
-        isShooting = readyToShoot;
+        isShooting = !readyToShoot;
     }
 
-    protected void MyInput()
+    protected void TriggerPull()
     {
-        if (Input.GetKey(KeyCode.Mouse0)) shooting = true;
-
         //Shoot
         if (readyToShoot && shooting && /*!reloading &&*/  ammo.GetCurrentMag() > 0)
         {
@@ -96,8 +96,6 @@ public abstract class GunSystem2 : MonoBehaviour
                 Shoot();
             }
         }
-
-        if (Input.GetKeyUp(KeyCode.Mouse0)) shooting = false;
     }
 
     #region "Shooting Logic"
@@ -159,16 +157,27 @@ public abstract class GunSystem2 : MonoBehaviour
     }
 
     #endregion
+    
+
+    public void InterruptResetShot()
+    {
+        StopCoroutine(resetShot);
+        readyToShoot = true;
+    }
+
+    public bool GetIsAutomatic()
+    {
+        return isAutomatic;
+    }
 
     public void SetReadyToShoot(bool value)
     {
         readyToShoot = value;
     }
 
-    public void InterruptResetShot()
+    public void SetShooting(bool value)
     {
-        StopCoroutine(resetShot);
-        readyToShoot = true;
+        shooting = value;
     }
 
 }
