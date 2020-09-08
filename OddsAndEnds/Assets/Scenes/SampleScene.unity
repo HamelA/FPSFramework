@@ -1106,6 +1106,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1244701811, guid: 8988147a226189a40b1628da6aed709c, type: 3}
+      propertyPath: isAutomatic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1244701816, guid: 8988147a226189a40b1628da6aed709c, type: 3}
       propertyPath: ammoText
       value: 

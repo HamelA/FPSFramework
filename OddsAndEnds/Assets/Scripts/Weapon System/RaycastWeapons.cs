@@ -30,7 +30,7 @@ public class RaycastWeapons : GunSystem2
         Vector3 direction = fpsCam.transform.forward + new Vector3(x, y, z);
 
         //RayCast
-        if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, whatIsEnemy))
+        if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, whatIsEnemy, QueryTriggerInteraction.Ignore))
         {
             //Debug.Log(rayHit.collider.name);
 

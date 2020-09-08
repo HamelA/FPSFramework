@@ -46,13 +46,14 @@ public class Cooldown : Ammo
 
     private void Update()
     {
-        if (!overheating)
-        {
-            DecreaseHeat();
-        }
-        else if (overheating && !isRunning)
+        
+        if (overheating && !isRunning)
         {
             StartCoroutine(OverheatWait());
+        }
+        else if (!overheating || !retainHeat)
+        {
+            DecreaseHeat();
         }
 
         TextManagement();
@@ -68,15 +69,10 @@ public class Cooldown : Ammo
     {
         isRunning = true;
         gs2.InterruptResetShot();
-        gs2.SetReadyToShoot(false);       //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
+        gs2.SetReadyToShoot(false);
 
         while (overheatTime > overheatCounter)
         {
-            if (!retainHeat)
-            {
-                DecreaseHeat();
-            }
-
             overheatCounter += Time.deltaTime;
 
             yield return null;
@@ -85,7 +81,7 @@ public class Cooldown : Ammo
         overheatCounter = 0;
         overheating = false;
 
-        gs2.SetReadyToShoot(true);        //VARIABLE GETS RESET BY RESET SHOT IN GUN SYSTEM
+        gs2.SetReadyToShoot(true);
         isRunning = false;
     }
 

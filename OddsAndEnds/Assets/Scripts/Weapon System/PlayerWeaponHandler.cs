@@ -29,10 +29,11 @@ public class PlayerWeaponHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetInput();
+        ShootWeapon();
+        ChangeWeapon();
     }
 
-    private void GetInput()
+    private void ShootWeapon()
     {
         if (gunList[currentWeapon].GetIsAutomatic())
             gunList[currentWeapon].SetShooting(Input.GetKey(KeyCode.Mouse0));
@@ -40,10 +41,46 @@ public class PlayerWeaponHandler : MonoBehaviour
             gunList[currentWeapon].SetShooting(Input.GetKeyDown(KeyCode.Mouse0));
     }
 
+    private void ChangeWeapon()
+    {
+        int previousWeapon = currentWeapon;
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            if (currentWeapon < weaponHolder.childCount - 1)
+                currentWeapon++;
+            else
+                currentWeapon = 0;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (currentWeapon > 0)
+                currentWeapon--;
+            else
+                currentWeapon = weaponHolder.childCount - 1;
+        }
+
+        if (previousWeapon != currentWeapon)
+            ChangeWeaponHelper();
+    }
+
+    private void ChangeWeaponHelper()
+    {
+        for (int i = 0; i < gunList.Length; i++)
+        {
+            if (i != currentWeapon)
+                gunList[i].gameObject.SetActive(false);
+            else if (i == currentWeapon)
+                gunList[i].gameObject.SetActive(true);
+        }
+    }
+
     private void InitWeaponList()
     {
         //for (int i = 0; i < weaponHolder.childCount; i++)
             //weaponList.Add(weaponHolder.GetChild(i).gameObject.GetComponent<GunSystem2>());
         gunList = weaponHolder.GetComponentsInChildren<GunSystem2>(true);
+
+        Debug.Log(gunList.Length);
     }
 }

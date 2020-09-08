@@ -86,13 +86,11 @@ public abstract class GunSystem2 : MonoBehaviour
             {
                 if (attackCharge.ChargeShot())
                 {
-                    bulletsShot = bulletsPerTap;
                     Shoot();
                 }
             }
             else
             {
-                bulletsShot = bulletsPerTap;
                 Shoot();
             }
         }
@@ -111,6 +109,8 @@ public abstract class GunSystem2 : MonoBehaviour
 
     IEnumerator ShotBurst()
     {
+        bulletsShot = bulletsPerTap;
+
         do
         {
             if (bulletsShot <= bulletsPerTap)
